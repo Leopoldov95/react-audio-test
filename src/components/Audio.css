@@ -1,0 +1,126 @@
+.audio {
+  border: 1px solid black;
+  padding: 2rem 3rem 1rem 3rem;
+  display: block;
+  margin-bottom: 1.5rem;
+}
+.audio a svg {
+  color: #424b5a;
+}
+.audio button {
+  border: none;
+  outline: none;
+}
+.audio button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.audio .audio__title {
+  font-size: 21px;
+  font-weight: 700;
+}
+.audio .audio__playback {
+  display: grid;
+  grid-template-columns: 10% 70% 20%;
+}
+.audio .audio__playback .audio__details .audio__info {
+  display: flex;
+  margin-top: 1rem;
+  gap: 1.5rem;
+}
+.audio .audio__playback .audio__info .audio__title {
+  font-weight: 700;
+  font-size: 21px;
+}
+.audio .audio__playback .audio__details .audio__download {
+  margin-left: 12px;
+  cursor: pointer;
+  transition: all ease 100ms;
+}
+.audio .audio__playback .audio__details .audio__download:hover {
+  opacity: 0.75;
+}
+.audio .audio__playback .audio__text {
+  font-size: 16px;
+}
+.audio .audio__playback .audio__text span {
+  margin-right: 0.5rem;
+}
+.audio .audio__playback .audio__text__label {
+  font-weight: 400;
+  font-size: 16px;
+  color: gray;
+}
+.audio .audio__playback .playback__btn {
+  width: 50px;
+  height: 50px;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+.audio .audio__playback .audio__duration {
+  align-self: flex-end;
+}
+.audio .audio__wave {
+  margin-left: 5rem;
+  width: 600px;
+  position: relative;
+}
+.audio .audio__wave > wave canvas {
+  cursor: pointer;
+}
+.audio .audio__wave > wave wave {
+  cursor: pointer;
+  border-right: none !important;
+}
+.audio .loader {
+  border: 8px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 8px solid #424b5a;
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  top: 20px;
+  left: 260px;
+  margin: 2rem auto;
+  /* -webkit-animation: spin 2s linear infinite; /* Safari */
+  /* animation: spin 2s linear infinite; */
+}
+.audio .hidden {
+  display: none;
+}
+/* Safari */
+
+.donut-container {
+  position: absolute;
+  top: 20px;
+  left: 260px;
+  width: 80px;
+  height: 80px;
+}
+
+.donut-background {
+  fill: none;
+  stroke: #f3f3f3;
+  stroke-width: 10px;
+}
+
+.donut-fill {
+  fill: none;
+  stroke: #424b5a;
+  stroke-width: 10px;
+  transition: stroke-dasharray 0.3s ease;
+}
+
+.donut-text {
+  font-family: Arial, sans-serif;
+  font-size: 24px;
+  fill: #333;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}

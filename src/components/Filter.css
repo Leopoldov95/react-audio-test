@@ -1,0 +1,45 @@
+#module__filter {
+  border: 1px solid black;
+  padding: 2rem;
+  min-height: 687px;
+}
+#module__filter .filter__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+#module__filter .filter__header h5 {
+  font-size: 21px;
+  font-weight: 700;
+}
+#module__filter .filter__header span {
+  font-size: 12px;
+  font-weight: 400;
+  cursor: pointer;
+}
+#module__filter .form__input {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.25rem;
+}
+#module__filter .form__input .form__row {
+  margin-bottom: 0.5rem;
+}
+#module__filter .form__input .form__label {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+#module__filter .form__input .dropdown__container {
+  position: relative;
+}
+#module__filter .form__input .dropdown__container i {
+  position: absolute;
+  top: 12px;
+  left: 230px;
+}
+
+#module__filter input[type="checkbox"] {
+  margin-right: 1rem;
+}
