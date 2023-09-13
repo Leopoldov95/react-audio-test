@@ -45,9 +45,9 @@ export class DataFilter {
   static sort_data(data: Audio[], type: string) {
     switch (type) {
       case "newest":
-        return data.sort((a, b) => a.date_added - b.date_added);
+        return data.sort((a: any, b: any) => a.date_added - b.date_added);
       case "oldest":
-        return data.sort((a, b) => b.date_added - a.date_added);
+        return data.sort((a: any, b: any) => b.date_added - a.date_added);
       default:
         return data;
     }

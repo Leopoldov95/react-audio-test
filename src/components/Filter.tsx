@@ -39,7 +39,7 @@ export const Filter = ({ data, form, setForm }) => {
     }));
   };
 
-  const handleCheckBox = (e: any, fieldName: string) => {
+  const handleCheckBox = (e: any) => {
     const value = e.target.value;
     const isChecked = e.target.checked;
     setForm((prevForm) => ({
@@ -70,7 +70,7 @@ export const Filter = ({ data, form, setForm }) => {
                 name="duration"
                 value="15"
                 checked={form.duration.includes("15")}
-                onChange={(e) => handleCheckBox(e, "duration")}
+                onChange={(e) => handleCheckBox(e)}
               />
               <label>15 sec</label>
             </div>
@@ -80,7 +80,7 @@ export const Filter = ({ data, form, setForm }) => {
                 name="duration"
                 value="30"
                 checked={form.duration.includes("30")}
-                onChange={(e) => handleCheckBox(e, "duration")}
+                onChange={(e) => handleCheckBox(e)}
               />
               <label>30 sec</label>
             </div>
