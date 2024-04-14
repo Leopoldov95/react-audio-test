@@ -94,8 +94,8 @@ export const AudioModule: React.FC<AudioProps> = ({
             <div>
               <span className="audio__text__label">Genre:</span>
               <span className="audio__text">
-                {data.genre.map((g) => (
-                  <span>{g}</span>
+                {data.genre.map((g, idx) => (
+                  <span key={idx}>{g}</span>
                 ))}
               </span>
             </div>
