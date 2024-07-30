@@ -4,7 +4,6 @@ import "./App.css";
 import { Audio } from "./interfaces/Interfaces";
 
 // dependencies
-import { useQuery } from "react-query";
 import { DataFilter } from "./helpers/DataFilter";
 
 // components
@@ -12,15 +11,8 @@ import { Filter } from "./components/Filter";
 import { AudioModule } from "./components/Audio";
 import Auth from "./components/Auth";
 
-const URL =
-  "https://script.googleusercontent.com/macros/echo?user_content_key=8eTperNP90tYuIZoEONuoEhOxIXNcNLabtuawyxnuglTW1ULURT0DfkrSnNJVWzxSmH5wG6uPJ3MCviU_En9i3-1rG6WEiD3m5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnDzCzsG3-ZyloOKurH10R6osUEiLjbB8OkzuikQyZUOE4Qf5HSdPyYo2NrToerLbedTvCsTepXfObnlYwgO3dFdNogzSVR0e9A&lib=Mff1y0x4E02NQnW_8t0G4FMDcgDzYU7tA";
-
-/**TODO
- * 1. Add google auth
- * 2. Create simple email chekcer
- * 3. Store JWT token
- * 4. Optimize assets (don't need to load API everytime we make filter change)
- */
+//const URL =
+("https://script.googleusercontent.com/macros/echo?user_content_key=8eTperNP90tYuIZoEONuoEhOxIXNcNLabtuawyxnuglTW1ULURT0DfkrSnNJVWzxSmH5wG6uPJ3MCviU_En9i3-1rG6WEiD3m5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnDzCzsG3-ZyloOKurH10R6osUEiLjbB8OkzuikQyZUOE4Qf5HSdPyYo2NrToerLbedTvCsTepXfObnlYwgO3dFdNogzSVR0e9A&lib=Mff1y0x4E02NQnW_8t0G4FMDcgDzYU7tA");
 
 // App will be our state management and data controller
 const App = () => {
@@ -39,22 +31,25 @@ const App = () => {
     null
   );
 
-  const query = useQuery(
-    "repoData",
-    () => fetch(URL).then((res) => res.json()),
-    {
-      enabled: false,
-    }
-  );
+  // const query = useQuery(
+  //   "repoData",
+  //   () => fetch(URL).then((res) => res.json()),
+  //   {
+  //     enabled: false,
+  //   }
+  // );
 
   // check if we have a user saved
   React.useEffect(() => {
     let token: any = localStorage.getItem("token");
+    let data: any = localStorage.getItem("fetch_data");
     if (token) {
       token = JSON.parse(token);
+      console.log(token);
+
       // make sure that the token has not expired
       const currentDate = new Date();
-      const { expiration, details } = token;
+      const { expiration, email } = token;
 
       if (new Date(expiration) < currentDate) {
         console.log("token has expired!!!");
@@ -64,16 +59,12 @@ const App = () => {
         return;
       }
 
-      setUser(details);
+      setUser(email);
     }
-    // console.log(token);
-  }, []);
 
-  React.useEffect(() => {
-    if (query.data) {
-      const parsedData = DataFilter.parse_data(
-        DataFilter.rename_keys(query.data)
-      );
+    if (data) {
+      data = JSON.parse(data);
+      const parsedData = DataFilter.parse_data(DataFilter.rename_keys(data));
       setParsed(parsedData);
 
       let filtered = DataFilter.sort_data(parsedData, sort);
@@ -81,7 +72,22 @@ const App = () => {
 
       setFilteredData(filtered);
     }
-  }, [query.data]);
+    // console.log(token);
+  }, []);
+
+  // React.useEffect(() => {
+  //   if (query.data) {
+  //     const parsedData = DataFilter.parse_data(
+  //       DataFilter.rename_keys(query.data)
+  //     );
+  //     setParsed(parsedData);
+
+  //     let filtered = DataFilter.sort_data(parsedData, sort);
+  //     filtered = DataFilter.filter_data(filtered, form);
+
+  //     setFilteredData(filtered);
+  //   }
+  // }, [query.data]);
 
   React.useEffect(() => {
     if (parsed.length > 0) {
@@ -92,13 +98,13 @@ const App = () => {
     }
   }, [form, sort]);
 
-  React.useEffect(() => {
-    if (user) {
-      console.log("We have a user");
-      console.log(user);
-      query.refetch();
-    }
-  }, [user]);
+  // React.useEffect(() => {
+  //   if (user) {
+  //     console.log("We have a user");
+  //     console.log(user);
+  //     // query.refetch();
+  //   }
+  // }, [user]);
 
   const handlePlay = (key: string) => {
     if (currentPlaying === key) {
@@ -120,7 +126,7 @@ const App = () => {
     <div id="app">
       <div className="container">
         {!user ? (
-          <Auth setUser={setUser} />
+          <Auth setUser={setUser} setData={setData} />
         ) : (
           <>
             <div className="app__header">
@@ -159,22 +165,20 @@ const App = () => {
               </div>
               <div>
                 <div className="app__content__cards">
-                  {query.status === "loading" && <h1>Loading....</h1>}
-                  {query.status === "success" &&
-                    (filteredData.length > 0 ? (
-                      filteredData
-                        .slice(0, page * 10)
-                        .map((audio: Audio) => (
-                          <AudioModule
-                            key={audio.music_link}
-                            data={audio}
-                            isPlaying={currentPlaying === audio.music_link}
-                            handlePlay={() => handlePlay(audio.music_link)}
-                          ></AudioModule>
-                        ))
-                    ) : (
-                      <h1>Sorry, no matches!</h1>
-                    ))}
+                  {filteredData.length > 0 ? (
+                    filteredData
+                      .slice(0, page * 10)
+                      .map((audio: Audio) => (
+                        <AudioModule
+                          key={audio.music_link}
+                          data={audio}
+                          isPlaying={currentPlaying === audio.music_link}
+                          handlePlay={() => handlePlay(audio.music_link)}
+                        ></AudioModule>
+                      ))
+                  ) : (
+                    <h1>Sorry, no matches!</h1>
+                  )}
                 </div>
                 <button
                   disabled={page * 10 >= filteredData.length}

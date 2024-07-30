@@ -1,79 +1,58 @@
 import React from "react";
 import "./Auth.css";
 import { useGoogleLogin } from "@react-oauth/google";
-import { useQuery } from "react-query";
+import { postAuth } from "../api/api.js";
 
-const Auth = ({ setUser }) => {
-  const regex = /@frequence\.com$/;
-  const [response, setResponse] = React.useState(null);
+const Auth = ({ setUser, setData }) => {
   const [error, setError] = React.useState("");
-
-  const googleTokenQuery = useQuery({
-    queryKey: ["googleAuth", response],
-    queryFn: () => fetchGoogleDetails(response),
-    enabled: false,
-  });
-
-  React.useEffect(() => {
-    if (response) {
-      googleTokenQuery.refetch(); // Manually trigger the query when response changes
-    }
-  }, [response]);
-
-  React.useEffect(() => {
-    if (googleTokenQuery.data) {
-      handleGoogleUser(googleTokenQuery.data);
-    }
-  }, [googleTokenQuery.data]);
 
   const login: any = useGoogleLogin({
     onSuccess: (res) => handleGoogleAuth(res),
-    onError: (error) => console.log("Login Failed:", error),
+    //? Maybe throw a UI message for login error?
+    onError: (error) => console.log("Google Login Failed:", error),
   });
 
-  // emulates a fetch (useQuery expects a Promise)
-  const fetchGoogleDetails = (token) =>
-    fetch(
-      `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${token.access_token}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token.access_token}`,
-          Accept: "application/json",
-        },
+  //* First line of contact
+  const handleGoogleAuth = async (res) => {
+    const postReq = await postAuth(res.access_token);
+    if (postReq) {
+      if (postReq?.message) {
+        setError(postReq?.message);
       }
-    ).then((res) => res.json());
 
-  const handleGoogleAuth = (res) => {
-    if (!res) return null; // will be an error
-    setResponse(res);
+      if (postReq?.data) {
+        // API call successful!
+        // set the user
+        handleGoogleUser(postReq.data.email);
+        // store the data
+        localStorage.setItem("fetch_data", JSON.stringify(postReq.data.data));
+        setData(JSON.parse(postReq.data.data));
+      }
+    }
   };
 
-  const handleGoogleUser = (details) => {
-    const { email } = details;
-    const { access_token } = response;
+  const handleGoogleUser = (email) => {
     const expiration = new Date();
     expiration.setDate(expiration.getDate() + 30);
 
-    if (!regex.test(email)) {
-      setError("Invalid Email! Email must be a Frequence account.");
-      return;
-    }
+    console.log(email);
+
+    //! I left off here, just need to clean up and set data as state
 
     // set the access_token to localstorage
     localStorage.setItem(
       "token",
       JSON.stringify({
-        access_token,
-        details,
+        email,
         expiration,
       })
     );
-    setUser(details);
+    setUser(email);
   };
 
   return (
     <div className="auth">
-      {googleTokenQuery.status === "loading" && (
+      {/* {googleTokenQuery.status === "loading" && (
         <div className="loader">
           <div className="lds-ellipsis">
             <div></div>
@@ -82,7 +61,7 @@ const Auth = ({ setUser }) => {
             <div></div>
           </div>
         </div>
-      )}
+      )} */}
       <div className="container-small">
         <h2>You Must Be Signed In With A Valid Google Account</h2>
         <button onClick={login}>
